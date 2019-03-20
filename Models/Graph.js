@@ -10,7 +10,7 @@ export class Graph {
     }
 
     addVertice(vertice) {
-        if(this.getVerticeById(vertice.id) != undefined) return false; //Id already exist
+        if(this.getVerticeById(vertice.id)) return false; //Id already exist
         this.vertices.push(vertice);
     }
 
@@ -18,7 +18,13 @@ export class Graph {
         const indexVerticeToRemove = this.vertices.findIndex(element => {
             return (element.id == id)
         })
-        if (indexVerticeToRemove != undefined) this.vertices.slice(indexVerticeToRemove, 1);
+        if (indexVerticeToRemove == undefined) return false; // No vertice with this id
+        
+        this.vertices.slice(indexVerticeToRemove, 1);
+
+        this.vertices = this.vertices.filter(element => {
+            return (element.id1 != id && element.id2 != id)
+        })
     }
 
     addEdge(edge) {
@@ -33,9 +39,10 @@ export class Graph {
     }
 
     getVerticeById(id) {
-        this.vertices.find(element => {
+        const vertice = this.vertices.find(element => {
             return element.id == id;
         })
+        return (vertice==undefined) ? false : vertice;
     }
 
 }
