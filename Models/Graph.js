@@ -1,3 +1,5 @@
+
+
 export class Graph {
 
     constructor(name, directed) {
@@ -20,11 +22,19 @@ export class Graph {
         })
         if (indexVerticeToRemove == undefined) return false; // No vertice with this id
         
-        this.vertices.slice(indexVerticeToRemove, 1);
+        this.vertices.splice(indexVerticeToRemove, 1);
 
-        this.vertices = this.vertices.filter(element => {
+        this.edges = this.edges.filter(element => {
             return (element.id1 != id && element.id2 != id)
         })
+    }
+
+    getNextVerticeId(){
+        let maxId = 0;
+        for (let vertice of this.vertices){
+            if(vertice.id > maxId) maxId = vertice.id;
+        }
+        return ++maxId
     }
 
     addEdge(edge) {
