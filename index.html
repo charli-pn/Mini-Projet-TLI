@@ -1,11 +1,38 @@
 <html>
+  <head> </head>
 
-<head>
+  <body>
+    <div>
+      <h1>Options</h1>
+      <input type="checkbox" id="directed" />
+      <label for="directed">Graphe orienté</label>
+      <button type="button" id="reset">Reset</button>
+    </div>
+</br>
+    <div>
+      <label for="fileName">File name</label>
 
-</head>
+      <input type="text" id="fileName"/>
 
-<body>
-    <canvas id="canvas" width="500" height="500" style="border: 1px solid black;"></canvas>
-</body>
-<script type="module" src="controler.js"></script>
+      <button type="button" id="exportGraph">Exporter</button>
+
+    </div>
+</br>
+    <div>
+      <label for="importGraph">Importer un fichier</label>
+
+      <input type='file' id="importGraph">
+
+    </div>
+</br>
+
+    <canvas
+      id="canvas"
+      width="500"
+      height="500"
+      style="border: 1px solid black;"
+    ></canvas>
+  </body>
+  <script src="./vendor/fileSaver.js"></script>
+  <script type="module" src="controler.js"></script>
 </html>
