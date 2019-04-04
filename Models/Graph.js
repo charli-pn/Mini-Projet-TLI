@@ -12,7 +12,7 @@ export class Graph {
 
   addVertice(x, y) {
     const verticeId = this.getNextVerticeId();
-    const vertice = new Vertice(verticeId, verticeId, new Position(x, y))
+    const vertice = new Vertice(verticeId, verticeId, new Position(x, y));
     this.vertices.push(vertice);
   }
 
@@ -36,14 +36,16 @@ export class Graph {
     return ++maxId;
   }
 
-  addEdge(id1, id2) {
+  addEdge(id1, id2, weight) {
     const alreadyExistingEdge = this.edges.find(edge => {
       if (edge.id1 == id1 && edge.id2 == id2) return true;
     });
 
-    if(alreadyExistingEdge)return;
+    if (alreadyExistingEdge) return;
 
-    const newEdge = new Edge(id1, id2);
+    if (!weight) weight = 1;
+
+    const newEdge = new Edge(id1, id2, weight);
 
     this.edges.push(newEdge);
   }
@@ -52,7 +54,8 @@ export class Graph {
     const indexEdgeToRemove = this.edges.findIndex(element => {
       return element.id1 == id1 && element.id2 == id2;
     });
-    if (indexEdgeToRemove != undefined) this.edges.slice(indexEdgeToRemove, 1);
+    console.log(indexEdgeToRemove);
+    if (indexEdgeToRemove != undefined) this.edges.splice(indexEdgeToRemove, 1);
   }
 
   getVerticeById(id) {

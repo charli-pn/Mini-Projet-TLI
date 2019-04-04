@@ -53,12 +53,26 @@ canvas.element.onmousedown = ev => {
         return;
     }
 
-    graph.addEdge(canvas.selected.id, target.id)
+    // Edge existe déjà => on le supprime
+    const alreadyExistingEdge = graph.edges.find(edge => {
+        if (edge.id1 == canvas.selected.id && edge.id2 == target.id) return true;
+      });
+    
+    if (alreadyExistingEdge) {
+        graph.removeEdge(canvas.selected.id, target.id)
+        canvas.refresh()
+        canvas.selected = null;
+        return;
+    }
+
+
+    const weight = 1; //TODO: weight interface
+
+    // On ajoute
+    graph.addEdge(canvas.selected.id, target.id, weight)
     canvas.selected = null
     canvas.refresh();
-    console.log(graph)
     return;
-
 }
 
 canvas.element.onmouseup = ev => {
@@ -141,7 +155,7 @@ function loadGraph(json){
     });
 
     json.edges.forEach(edge => {
-        graph.addEdge(edge.id1, edge.id2);
+        graph.addEdge(edge.id1, edge.id2, edge.weight);
     })
 
     console.log(graph)
