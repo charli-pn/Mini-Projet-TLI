@@ -81,7 +81,6 @@ function PageRank(graph) {
 
     let affichage = '<table><thead><td>Sommet</td><td>Poids</td><td>Classement</td></thead>';
     for (let i = 0; i < tableauSommets.length; i++) {
-        console.log(tableauSommets[i].point.label)
         affichage += '<tr><td>' + tableauSommets[i].point.label + '</td>' +
             '<td>' + tableauPoids[i] + '</td>' +
             '<td>' + classement[i] + '</td></tr>';
@@ -93,11 +92,6 @@ function PageRank(graph) {
 
 
 function bipartition(graph) {
-    // Récupérer tous les sommets et leurs voisins dans un tableau
-
-
-
-    // Initialisation
     let tableauSommets = [];
     let tabA = [], tabB = [];
 
@@ -153,73 +147,56 @@ function bipartition(graph) {
     }
 }
 
-function dijkstraRec(tableauSommets, chemin, from, to, poidsTotal ){
-    let origine = from;
-    for (let i = 0; i<tableauSommets.length; i++){
-        if(tableauSommets[i].point.id === from){
-
+function dijkstraRec(graph, from, to, poidsTotal = 0){
+    let chemin = [];
+    let newfrom = from;
+    let poids = poidsTotal;
+    let minPoids = [99999, null];
+    chemin[0] = from;
+    graph.forEach(function(point){
+        if (point.poids < minPoids[0] && point.poids !== -1)
+            minPoids = [point.poids, point];
+    });
+    graph.forEach(function (sommet) {
+        if (minPoids[1] !== null) {
+            minPoids[1].pointTo.forEach(function (sommetPointe) {
+                if (sommetPointe.pointed === sommet.point.id) {
+                    sommet.poids = sommetPointe.poids;
+                }
+            })
         }
-    }
+    });
+    graph.forEach(function (point) {
+        if (point.poids < minPoids[0] && point.poids !== -1) {
+            minPoids = [point.poids, point];
+            newfrom = point.point.id;
+            poids += point.poids;
+        }
+    });
+
+    console.log(chemin);
+    if (newfrom!== to) return chemin.concat(dijkstra(graph, newfrom, to, poids));
+    else return [chemin, poids];
 
 }
 
-function dijkstra(/*graph*/ from, to) {
-    let graph = {
-        "name": "nom_du_graphe",
-        "directed": "false",
-        "vertices": [
-            {
-                "id": "0",
-                "label": "v1",
-                "pos": {
-                    "x": "100",
-                    "y": "100"
-                }
-            },
-            {
-                "id": "1",
-                "label": "v7",
-                "pos": {
-                    "x": "150",
-                    "y": "50"
-                }
-            },
-            {
-                "id": "2",
-                "label": "v19",
-                "pos": {
-                    "x": "83",
-                    "y": "27"
-                }
-            }
-        ],
-        "edges": [
-            {
-                "id1": "0",
-                "id2": "1",
-                "poids": "3"
-            },
-            {
-                "id1": "0",
-                "id2": "2",
-                "poids": "6"
-            },
-        ]
-    };
+function dijkstra(graph, from, to) {
     let tableauSommets = [];
+
     graph.vertices.forEach(function (point) {
         let aretesPointees = [];
         graph.edges.forEach(function (arete) {
             if (arete.id1 === point.id) {
-                aretesPointees.push(arete.id2);
+                aretesPointees.push({pointed: arete.id2, poids: arete.weight});
             }
         });
-        let sommetAvecAretesPointees = {point: point, pointTo: aretesPointees};
+        let value = point.id === from ? 0 : -1;
+        let sommetAvecAretesPointees = {point: point, pointTo: aretesPointees, parcouru: false, poids: value};
         tableauSommets.push(sommetAvecAretesPointees);
     });
 
-    dijkstraRec(graph,'[{"id":"'+from+'"}', "1", "0", 0)
+    let result = dijkstraRec(tableauSommets, "1", "0");
+
 
 }
 
-window.addEventListener('onload', dijkstra());
